@@ -73,7 +73,13 @@ private func hexadecimalStringFromData(data: NSData) -> String {
             body["custom"] = customData
         }
         
-        let jsonDataBody = NSJSONSerialization.dataWithJSONObject(body, options: nil, error: &error)
+        let jsonDataBody: NSData?
+        do {
+            jsonDataBody = try NSJSONSerialization.dataWithJSONObject(body, options: [])
+        } catch var error1 as NSError {
+            error = error1
+            jsonDataBody = nil
+        }
         
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
@@ -85,12 +91,12 @@ private func hexadecimalStringFromData(data: NSData) -> String {
             (data, response, error) -> Void in
             
             if error != nil {
-                NSLog("PushServer Request Error: %@", error)
+                NSLog("PushServer Request Error: %@", error!)
             }
             
             if let response = response as? NSHTTPURLResponse {
                 if response.statusCode != 200 {
-                    let responseObject: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil)
+                    let responseObject: AnyObject? = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
                     
                     if let responseObject = responseObject as? NSObject {
                         NSLog("PushServer Request Error: %@", responseObject)
