@@ -10,7 +10,7 @@ import UIKit
 
 public typealias PushCallbackHandler = ([NSObject : AnyObject], Bool) -> Void
 
-public class PushClientHelper {
+@objc public class PushClientHelper : NSObject {
     
     private static var callbackHandlers: [PushCallbackHandler] = []
 
@@ -22,7 +22,7 @@ public class PushClientHelper {
     }
     
     @available(iOS 8.0, *)
-    public class func registerUserNotificationSettings(types: UIUserNotificationType = [.Alert, .Badge, .Sound],
+    public class func registerUserNotificationSettings(types types: UIUserNotificationType = [.Alert, .Badge, .Sound],
                                                        categories: Set<UIUserNotificationCategory>? = nil) {
         let app = UIApplication.sharedApplication()
         let settings = UIUserNotificationSettings(forTypes: types, categories: categories)
@@ -31,7 +31,7 @@ public class PushClientHelper {
         app.registerForRemoteNotifications()
     }
     
-    public class func registerForRemoteNotificationTypes(types: UIRemoteNotificationType = [.Alert, .Badge, .Sound]) {
+    public class func registerForRemoteNotification(types types: UIRemoteNotificationType = [.Alert, .Badge, .Sound]) {
         let app = UIApplication.sharedApplication()
         app.registerForRemoteNotificationTypes(types)
     }
